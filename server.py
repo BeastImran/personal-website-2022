@@ -65,10 +65,9 @@ async def assets(request, asset_path):
     return await send_response(request=request, response=await file(assets_path + asset_path))
 
 
-# @app.route("/sitemap")
-# @app.route("/sitemap.xml")
-# async def sitemap(_):
-#     return await file('sitemap.xml')
+@app.route("/sitemap.xml")
+async def sitemap(_):
+    return await file('sitemap.xml')
 
 
 @app.route("/google1ae25284ecc16fa9.html")
