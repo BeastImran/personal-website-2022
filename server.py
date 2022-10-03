@@ -16,7 +16,6 @@ async def authentic_domain(request):
 
 
 async def send_response(request, response):
-    # print("request: ", dir(request))
     requested_file = request.path.rsplit(".")
 
     if await authentic_domain(request):
@@ -47,8 +46,8 @@ async def send_response(request, response):
 
 @app.middleware("response")
 async def add_cache_tts_policy(_, response):
-    response.headers["cache-control"] = "private, must-revalidate, max-age=2592000"
-    response.headers["content-security-policy"] = f"default-src {sources}; object-src 'none'; worker-src 'none'; font-src {sources} data:; form-action {sources};"
+    response.headers["cache-control"] = "private, must-revalidate, max-age=60"
+    response.headers["content-security-policy"] = f"default-src {sources}; object-src 'none'; worker-src 'none'; font-src {sources} data:; form-action {sources}"
     response.headers["referrer-policy"] = "strict-origin-when-cross-origin"
     response.headers["x-frame-options"] = "SAMEORIGIN"
     response.headers["x-xss-protection"] = "1; mode=block"
@@ -56,7 +55,11 @@ async def add_cache_tts_policy(_, response):
 
 
 @app.get("/")
-async def hello_world(request):
+@app.get("/index")
+@app.get("/index.html")
+@app.get("/home")
+@app.get("/home.html")
+async def index(request):
     return await send_response(request=request, response=await file("./index.html"))
 
 
@@ -78,8 +81,3 @@ async def google_verification(_):
 @app.route("/robots.txt")
 async def robots_txt(_):
     return await file('robots.txt')
-
-
-if __name__ == '__main__':
-    app.run(host=only_domain, access_log=False,
-            debug=False, workers=5, port=port)
