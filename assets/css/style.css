@@ -12700,6 +12700,10 @@ BootstrapIcons.min.css
   content: "\f661";
 }
 
+.bi-translate::before {
+  content: "\f658";
+}
+
 .bi-braces-asterisk::before {
   content: "\f70e";
 }
