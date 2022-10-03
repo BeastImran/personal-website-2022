@@ -46,7 +46,7 @@ async def send_response(request, response):
 
 @app.middleware("response")
 async def add_cache_tts_policy(_, response):
-    response.headers["cache-control"] = "private, must-revalidate, max-age=60"
+    response.headers["cache-control"] = "private, must-revalidate, max-age=2592000"
     response.headers["content-security-policy"] = f"default-src {sources}; object-src 'none'; worker-src 'none'; font-src {sources} data:; form-action {sources}"
     response.headers["referrer-policy"] = "strict-origin-when-cross-origin"
     response.headers["x-frame-options"] = "SAMEORIGIN"
