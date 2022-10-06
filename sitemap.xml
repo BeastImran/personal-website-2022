@@ -7,7 +7,7 @@
         <priority>1.0</priority>
         <image:image>
             <image:loc>http://beastimran.com/assets/img/me.jpg</image:loc>
-            <image:title></image:title>
+            <image:title>Shaik Imran's portrait</image:title>
         </image:image>
     </url>
     <url>
@@ -17,7 +17,7 @@
         <priority>0.9</priority>
         <image:image>
             <image:loc>http://beastimran.com/assets/img/me.jpg</image:loc>
-            <image:title></image:title>
+            <image:title>Shaik Imran's portrait</image:title>
         </image:image>
     </url>
     <url>
@@ -27,7 +27,7 @@
         <priority>0.9</priority>
         <image:image>
             <image:loc>http://beastimran.com/assets/img/me.jpg</image:loc>
-            <image:title></image:title>
+            <image:title>Shaik Imran's portrait</image:title>
         </image:image>
     </url>
     <url>
@@ -37,7 +37,7 @@
         <priority>0.9</priority>
         <image:image>
             <image:loc>http://beastimran.com/assets/img/me.jpg</image:loc>
-            <image:title></image:title>
+            <image:title>Shaik Imran's portrait</image:title>
         </image:image>
     </url>
     <url>
@@ -47,7 +47,7 @@
         <priority>0.9</priority>
         <image:image>
             <image:loc>http://beastimran.com/assets/img/me.jpg</image:loc>
-            <image:title></image:title>
+            <image:title>Shaik Imran's portrait</image:title>
         </image:image>
     </url>
 </urlset>
