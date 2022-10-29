@@ -1,5 +1,4 @@
 # This main.py will be used as the entry point for any request.
-from glob import glob
 from sanic import Sanic
 from sanic.response import file
 import gzip
@@ -10,12 +9,12 @@ from paths import domain, www_domain, port, assets_path, only_domain, only_www_d
 
 sources = f"{domain}:{port} {www_domain}:{port}"
 gzip_cache = dict()
-app = Sanic("BeastImran")
+app = Sanic("HTTPS_BeastImran")
 
 
 @app.on_request
 async def vaildate_request_domain(request):
-    host = request.headers.get('host', '').replace(":" + str(port), '')
+    host = request.headers.get('host', '').split(":")[0]
 
     if not (host == only_domain or host == only_www_domain):
         return html(f"<h1>This domain is being used to impersonate <a href=\"http://{only_domain}\">{only_domain}</a> or is something wrong. Please report this domain and any other realted info <a href=\"https://t.me/beastimran\">here</a>.</h1>")
