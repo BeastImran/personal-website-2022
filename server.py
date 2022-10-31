@@ -1,32 +1,23 @@
-# This main.py will be used as the entry point for any request.
 from sanic import Sanic
+import sanic
 from sanic.response import file
 import gzip
 from io import BytesIO as IO
-from sanic import html
 
-from paths import domain, www_domain, port, assets_path, only_domain, only_www_domain, port
+from env import *
 
-sources = f"{domain}:{port} {www_domain}:{port}"
-gzip_cache = dict()
+PROD = False
+
+port_is_use = ssl_port if PROD else http_port
+
+sources = f"{domain}:{port_is_use} {www_domain}:{port_is_use}" if PROD else f"{domain}:{port_is_use} {www_domain}:{port_is_use}"
 app = Sanic("HTTPS_BeastImran")
-
-
-@app.on_request
-async def vaildate_request_domain(request):
-    host = request.headers.get('host', '').split(":")[0]
-
-    if not (host == only_domain or host == only_www_domain):
-        return html(f"<h1>This domain is being used to impersonate <a href=\"http://{only_domain}\">{only_domain}</a> or is something wrong. Please report this domain and any other realted info <a href=\"https://t.me/beastimran\">here</a>.</h1>")
-
-    if request.path in gzip_cache:
-        return gzip_cache[request.path]
 
 
 @app.on_response
 async def response_functions(request, response):
-    response.headers["cache-control"] = "private, must-revalidate, max-age=2592000"
-    response.headers["content-security-policy"] = f"default-src {sources}; object-src 'none'; worker-src 'none'; font-src {sources} data:; form-action {sources}"
+    response.headers["cache-control"] = "private"
+    response.headers["content-security-policy"] = f"script-src {sources}; object-src 'none'; worker-src 'none'; font-src {sources} data:; form-action {sources}"
     response.headers["referrer-policy"] = "strict-origin-when-cross-origin"
     response.headers["x-frame-options"] = "SAMEORIGIN"
     response.headers["x-xss-protection"] = "1; mode=block"
@@ -34,14 +25,12 @@ async def response_functions(request, response):
     response.headers["content-length"] = len(response.body)
 
     if request.path.rsplit(".")[-1].lower() in ("woff2", "woff", "png", "jpeg", "jpg", "mp4", "webm"):
-        gzip_cache[request.path] = response
         return response
 
     accept_encoding = request.headers.get(
         "Accept-Encoding", "") or request.headers.get("accept-encoding", "")
 
     if ("gzip" not in accept_encoding.lower()) or (response.status < 200 or response.status >= 300 or "Content-Encoding" in response.headers):
-        gzip_cache[request.path] = response
         return response
 
     gzip_buffer = IO()
@@ -54,7 +43,6 @@ async def response_functions(request, response):
     response.headers["vary"] = "accept-encoding"
     response.headers["content-length"] = len(response.body)
 
-    gzip_cache[request.path] = response
     return response
 
 
@@ -84,4 +72,13 @@ async def robots_txt(_):
 
 
 if __name__ == "__main__":
-    app.run("127.0.0.1", 80, access_log=False, debug=False)
+    if PROD:
+        app.prepare(host=only_domain, port=ssl_port, version=3,
+                    ssl=ssl_path, access_log=False, debug=False)
+
+        app.prepare(host=only_domain, port=ssl_port, version=1,
+                    ssl=ssl_path, access_log=False, debug=False)
+    else:
+        app.prepare(only_domain, http_port, access_log=False, debug=False)
+
+    Sanic.serve()
